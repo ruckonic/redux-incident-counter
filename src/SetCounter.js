@@ -1,20 +1,32 @@
-import { useDispatch } from 'react-redux';
-import { set } from './actions';
+import { useEffect, useState } from 'react';
+import { useCounter } from './hooks/useCounter';
 
 export const SetCounter = () => {
-  const dispatch = useDispatch();
+  const { count, set } = useCounter();
+  const [counter, setCounter] = useState(count);
+
+  useEffect(() => {
+    setCounter(count);
+  }, [count]);
+
   return (
     <section className="controls">
       <form
         onSubmit={(event) => {
           event.preventDefault();
           const el = event.target['set-to'];
-          dispatch(set(+el.value));
-          el.value = '';
+          set(+el.value);
         }}
       >
         <label htmlFor="set-to">Set Count</label>
-        <input id="set-to" type="number" />
+        <input
+          id="set-to"
+          type="number"
+          value={counter}
+          onChange={(e) => {
+            setCounter(e.target.value);
+          }}
+        />
         <input type="submit" />
       </form>
     </section>
